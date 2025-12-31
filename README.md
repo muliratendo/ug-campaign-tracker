@@ -8,18 +8,18 @@ Ug Campaign Tracker is a **civic-tech** web platform that maps official Uganda E
 
 - Visualise upcoming presidential campaign rallies on an interactive map, with districts, venues, dates, and times clearly shown.
 - Filter events by candidate, district, date range, or region (e.g. Kampala Metropolitan, Wakiso, Mukono).
-- See predicted traffic impact windows (e.g. “30–45 min delays near Kawempe around 3–6 pm”) based on typical peak-hour patterns and estimated crowd size.  
-- Get alternative route suggestions and basic travel advice when you click a rally (e.g. “use Northern Bypass instead of Bombo Road during this rally”).  
-- Opt‑in browser push notifications for districts or candidates you care about, with offline access to upcoming rally lists via PWA support.  
+- See predicted traffic impact windows (e.g. “30–45 min delays near Kawempe around 3–6 pm”) based on typical peak-hour patterns and estimated crowd size.
+- Get alternative route suggestions and basic travel advice when you click a rally (e.g. “use Northern Bypass instead of Bombo Road during this rally”).
+- Opt‑in browser push notifications for districts or candidates you care about, with offline access to upcoming rally lists via PWA support.
 - Neutral, non‑partisan presentation of information sourced from the Electoral Commission and trusted public sources.
 
 ## Tech stack
 
 **Frontend**
 
-- **Next.js** (React, SSR/SSG) for SEO‑friendly pages and fast initial loads.  
-- **TypeScript** for safer, self‑documenting code.  
-- **Tailwind CSS** (utility‑first) for mobile‑first, responsive UI.  
+- **Next.js** (React, SSR/SSG) for SEO‑friendly pages and fast initial loads.
+- **TypeScript** for safer, self‑documenting code.
+- **Tailwind CSS** (utility‑first) for mobile‑first, responsive UI.
 - **Next-PWA / service worker** for offline rally lists and push notifications.
 
 **Maps & routing**
@@ -31,31 +31,31 @@ Ug Campaign Tracker is a **civic-tech** web platform that maps official Uganda E
 
 **Backend & data**
 
-- **Node.js / Express** API for:  
-  - Ingesting and parsing Uganda Electoral Commission schedules (PDF/Excel/web).  
-  - Normalising and storing rallies and traffic predictions in Supabase.  
-  - Exposing rally, prediction, and routing endpoints to the frontend.  
-- **Supabase (Postgres)** for structured storage of: rallies, traffic predictions, users, and notification preferences.  
-- **Supabase Auth** for login and optional saved alerts.  
+- **Node.js / Express** API for:
+  - Ingesting and parsing Uganda Electoral Commission schedules (PDF/Excel/web).
+  - Normalising and storing rallies and traffic predictions in Supabase.
+  - Exposing rally, prediction, and routing endpoints to the frontend.
+- **Supabase (Postgres)** for structured storage of: rallies, traffic predictions, users, and notification preferences.
+- **Supabase Auth** for login and optional saved alerts.
 
 **AI & automation (optional)**
 
-- AI‑assisted parsing of EC documents into structured events (date, time, venue, candidate).  
+- AI‑assisted parsing of EC documents into structured events (date, time, venue, candidate).
 - Geocoding of venues and generation of short, human‑readable traffic notes.
 
 **CI/CD & hosting**
 
 - **GitHub Actions** for tests, linting, and automatic deployments.
-- **Vercel** for hosting the Next.js frontend and serverless API routes.  
+- **Vercel** for hosting the Next.js frontend and serverless API routes.
 - Supabase for managed Postgres, auth, and backups.
 
 ## Getting started
 
 ### Prerequisites
 
-- Node.js (LTS) and npm or pnpm installed locally.  
-- Git and access to this repository.  
-- A Supabase project (URL + anon key + service key).  
+- Node.js (LTS) and npm or pnpm installed locally.
+- Git and access to this repository.
+- A Supabase project (URL + anon key + service key).
 - Optional: API keys for TomTom / other routing or geocoding providers.
 
 ### Installation
@@ -183,9 +183,9 @@ See `docs/commit-conventions.md` for full details (scopes, breaking changes, iss
 
 ### Branching model
 
-- `main`: Stable, deployable branch; protected and requires PR reviews.  
-- `develop`: Integration branch for features before promotion to `main`.  
-- `feature/*`: Short‑lived branches for individual features or fixes (e.g. `feature/routing-ui`).  
+- `main`: Stable, deployable branch; protected and requires PR reviews.
+- `develop`: Integration branch for features before promotion to `main`.
+- `feature/*`: Short‑lived branches for individual features or fixes (e.g. `feature/routing-ui`).
 - `hotfix/*`: Emergency fixes branched from `main`, merged back into both `main` and `develop`.
 
 All changes go through pull requests into `develop` or `main`, following branch protection rules configured in the repo.
@@ -194,26 +194,26 @@ All changes go through pull requests into `develop` or `main`, following branch 
 
 Planned improvements (subject to change):
 
-- Automated import and parsing when new EC campaign schedules are published.  
-- Per‑candidate colour‑coding on the map and candidate‑specific alert subscriptions.  
-- SMS or WhatsApp‑style alerts for users who do not use smartphones regularly.  
-- Luganda and other local language localisation, plus better accessibility support.  
+- Automated import and parsing when new EC campaign schedules are published.
+- Per‑candidate colour‑coding on the map and candidate‑specific alert subscriptions.
+- SMS or WhatsApp‑style alerts for users who do not use smartphones regularly.
+- Luganda and other local language localisation, plus better accessibility support.
 - More accurate traffic impact modelling combining historical traffic and live signals where available.
 
 ## Contributing
 
 Contributions, bug reports, and feature ideas are welcome. A typical flow:
 
-1. Fork the repo and create a feature branch from `develop`.  
-2. Follow the commit conventions and branching model above.  
-3. Add or update tests where relevant.  
-4. Open a pull request with a clear description, screenshots, and steps to test.  
+1. Fork the repo and create a feature branch from `develop`.
+2. Follow the commit conventions and branching model above.
+3. Add or update tests where relevant.
+4. Open a pull request with a clear description, screenshots, and steps to test.
 
 For conventional commits guidance, see the official spec and community guides.
 
 ## License
 
-Add your chosen license (e.g. MIT, Apache‑2.0) and place the full text in a `LICENSE` file at the root of the repo. Update this section once a license is chosen.
+`MIT LICENSE`: https://github.com/muliratendo/ug-campaign-tracker/blob/main/LICENSE
 
 ## Disclaimer
 
