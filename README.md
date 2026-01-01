@@ -1,6 +1,8 @@
-Ug Campaign Tracker is a **civic-tech** web platform that ingests official Uganda Electoral Commission presidential campaign schedules, maps rallies across Uganda, and predicts traffic disruption so motorists can pick better routes and travel times during the 2026 election season.
-
 # Ug Campaign Tracker
+
+[![CI - Frontend](https://github.com/muliratendo/ug-campaign-tracker/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/muliratendo/ug-campaign-tracker/actions/workflows/frontend-ci.yml)
+[![CI - Backend](https://github.com/muliratendo/ug-campaign-tracker/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/muliratendo/ug-campaign-tracker/actions/workflows/backend-ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Ug Campaign Tracker is a **civic-tech** web platform that maps official Uganda Electoral Commission presidential campaign events onto an interactive map of Uganda, helping motorists, boda riders, traders, and students anticipate rallies and avoid traffic disruption during the 2026 election season. The app ingests EC campaign schedules, converts them into structured rally events, overlays them on Leaflet + OpenStreetMap, and suggests smarter routes and timings around high-congestion corridors in and around Kampala.
 
@@ -184,36 +186,19 @@ See `docs/commit-conventions.md` for full details (scopes, breaking changes, iss
 ### Branching model
 
 - `main`: Stable, deployable branch; protected and requires PR reviews.
-- `develop`: Integration branch for features before promotion to `main`.
+- `develop`: Integration branch for features before promotion to `main`. **This is the default branch for pull requests.**
 - `feature/*`: Short‑lived branches for individual features or fixes (e.g. `feature/routing-ui`).
 - `hotfix/*`: Emergency fixes branched from `main`, merged back into both `main` and `develop`.
 
-All changes go through pull requests into `develop` or `main`, following branch protection rules configured in the repo.
+All changes go through pull requests into `develop` or `main`, following branch protection rules configured in the repo. Note that `main` is only updated from tested release PRs originating from `develop`.
 
-## Roadmap (high‑level)
+## Roadmap
 
-Planned improvements (subject to change):
-
-- Automated import and parsing when new EC campaign schedules are published.
-- Per‑candidate colour‑coding on the map and candidate‑specific alert subscriptions.
-- SMS or WhatsApp‑style alerts for users who do not use smartphones regularly.
-- Luganda and other local language localisation, plus better accessibility support.
-- More accurate traffic impact modelling combining historical traffic and live signals where available.
-
-## Contributing
-
-Contributions, bug reports, and feature ideas are welcome. A typical flow:
-
-1. Fork the repo and create a feature branch from `develop`.
-2. Follow the commit conventions and branching model above.
-3. Add or update tests where relevant.
-4. Open a pull request with a clear description, screenshots, and steps to test.
-
-For conventional commits guidance, see the official spec and community guides.
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for detailed feature plans and timelines.
 
 ## License
 
-`MIT LICENSE`: https://github.com/muliratendo/ug-campaign-tracker/blob/main/LICENSE
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Disclaimer
 
