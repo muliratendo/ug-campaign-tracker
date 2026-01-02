@@ -1,4 +1,4 @@
-import { Router, Request as ExpReq, Response as ExpRes } from 'express';
+import { Router, Request, Response } from 'express';
 import { ScraperService } from '../services/scraper';
 import { supabaseAdmin } from '../config/supabase';
 
@@ -6,12 +6,12 @@ const router = Router();
 const scraperService = new ScraperService();
 
 // Health Check
-router.get('/health', (req: ExpReq, res: ExpRes) => {
+router.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', service: 'ug-campaign-tracker-api' });
 });
 
 // GET /rallies - Public endpoint to fetch rallies
-router.get('/rallies', async (req: ExpReq, res: ExpRes) => {
+router.get('/rallies', async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabaseAdmin
       .from('rallies')
@@ -27,7 +27,7 @@ router.get('/rallies', async (req: ExpReq, res: ExpRes) => {
 });
 
 // GET /traffic - fetch traffic predictions
-router.get('/traffic', async (req: ExpReq, res: ExpRes) => {
+router.get('/traffic', async (req: Request, res: Response) => {
   try {
      const { data, error } = await supabaseAdmin
        .from('traffic_predictions')
@@ -42,7 +42,7 @@ router.get('/traffic', async (req: ExpReq, res: ExpRes) => {
 });
 
 // POST /trigger-scrape - Dev/Admin endpoint to manually trigger logic
-router.post('/trigger-scrape', async (req: ExpReq, res: ExpRes) => {
+router.post('/trigger-scrape', async (req: Request, res: Response) => {
   try {
     // In production, protect this with a secret key or auth middleware
     await scraperService.fetchSchedule();
@@ -53,7 +53,7 @@ router.post('/trigger-scrape', async (req: ExpReq, res: ExpRes) => {
 });
 
 // POST /subscribe - Placeholder for push notifications
-router.post('/subscribe', (req: ExpReq, res: ExpRes) => {
+router.post('/subscribe', (req: Request, res: Response) => {
   // In a real implementation, this would save the subscription to the database
   res.status(501).json({ message: 'Push notification subscription not yet implemented' });
 });
