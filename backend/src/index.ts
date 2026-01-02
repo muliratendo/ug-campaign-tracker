@@ -1,5 +1,4 @@
 import express from 'express';
-import { Request, Response, NextFunction } from 'express-serve-static-core';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -18,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 // Basic Health Check
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (req: any, res: any) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
@@ -26,7 +25,7 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api', apiRoutes);
 
 // Error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: any, res: any, next: any) => {
   console.error(err.stack);
   res.status(500).json({ 
     error: 'Internal Server Error',
