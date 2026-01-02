@@ -54,10 +54,70 @@ router.post('/trigger-scrape', strictLimiter, async (req: Request, res: Response
   }
 });
 
-// POST /subscribe - Placeholder for push notifications
-router.post('/subscribe', (req: Request, res: Response) => {
-  // In a real implementation, this would save the subscription to the database
-  res.status(501).json({ message: 'Push notification subscription not yet implemented' });
+// ============================================
+// PUSH NOTIFICATION ENDPOINTS
+// ============================================
+
+import { PushNotificationService } from '../services/push';
+import { validateSubscribe, validateUnsubscribe, validateTestNotification, validateNotifyRally } from '../middleware/validators';
+const pushService = new PushNotificationService();
+
+// POST /subscribe - Save push notification subscription
+router.post('/subscribe', validateSubscribe, async (req: Request, res: Response) => {
+  try {
+    const { userId, subscription } = req.body;
+
+    const result = await pushService.saveSubscription(userId, subscription);
+    res.json({ 
+      message: 'Subscription saved successfully', 
+      data: result 
+    });
+  } catch (err) {
+    console.error('Subscribe error:', err);
+    res.status(500).json({ error: (err as Error).message });
+  }
+});
+
+// DELETE /unsubscribe - Remove push notification subscription
+router.delete('/unsubscribe', validateUnsubscribe, async (req: Request, res: Response) => {
+  try {
+    const { userId, endpoint } = req.body;
+
+    const result = await pushService.removeSubscription(userId, endpoint);
+    res.json({ 
+      message: 'Subscription removed successfully', 
+      data: result 
+    });
+  } catch (err) {
+    console.error('Unsubscribe error:', err);
+    res.status(500).json({ error: (err as Error).message });
+  }
+});
+
+// POST /test-notification - Send test notification to user (dev/testing)
+router.post('/test-notification', validateTestNotification, async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body;
+
+    await pushService.sendTestNotification(userId);
+    res.json({ message: 'Test notification sent successfully' });
+  } catch (err) {
+    console.error('Test notification error:', err);
+    res.status(500).json({ error: (err as Error).message });
+  }
+});
+
+// POST /notify-rally - Send rally alert to all subscribers (admin only)
+router.post('/notify-rally', strictLimiter, validateNotifyRally, async (req: Request, res: Response) => {
+  try {
+    const { rallyId } = req.body;
+
+    await pushService.notifyRallyAlert(rallyId);
+    res.json({ message: 'Rally notification sent successfully' });
+  } catch (err) {
+    console.error('Rally notification error:', err);
+    res.status(500).json({ error: (err as Error).message });
+  }
 });
 
 export default router;
