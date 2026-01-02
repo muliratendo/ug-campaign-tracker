@@ -1,4 +1,5 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { Request, Response } from 'express-serve-static-core';
 import { ScraperService } from '../services/scraper';
 import { supabaseAdmin } from '../config/supabase';
 
@@ -21,8 +22,8 @@ router.get('/rallies', async (req: Request, res: Response) => {
     
     if (error) throw error;
     res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
   }
 });
 
@@ -36,8 +37,8 @@ router.get('/traffic', async (req: Request, res: Response) => {
      
      if (error) throw error;
      res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
   }
 });
 
@@ -47,8 +48,8 @@ router.post('/trigger-scrape', async (req: Request, res: Response) => {
     // In production, protect this with a secret key or auth middleware
     await scraperService.fetchSchedule();
     res.json({ message: 'Scrape triggered successfully' });
-  } catch (error) {
-    res.status(500).json({ error: (error as Error).message });
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
   }
 });
 

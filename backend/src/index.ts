@@ -1,8 +1,11 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
+import { Request, Response, NextFunction } from 'express-serve-static-core';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { supabaseAdmin } from './config/supabase';
+import apiRoutes from './routes/api';
+import { SchedulerService } from './services/scheduler';
 
 dotenv.config();
 
@@ -19,8 +22,6 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-import apiRoutes from './routes/api';
-import { SchedulerService } from './services/scheduler';
 
 app.use('/api', apiRoutes);
 
