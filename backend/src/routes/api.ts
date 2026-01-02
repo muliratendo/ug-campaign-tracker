@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { ScraperService } from '../services/scraper';
 import { supabaseAdmin } from '../config/supabase';
+import { strictLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 const scraperService = new ScraperService();
@@ -42,7 +43,8 @@ router.get('/traffic', async (req: Request, res: Response) => {
 });
 
 // POST /trigger-scrape - Dev/Admin endpoint to manually trigger logic
-router.post('/trigger-scrape', async (req: Request, res: Response) => {
+// STRICT rate limiting: 5 requests per hour
+router.post('/trigger-scrape', strictLimiter, async (req: Request, res: Response) => {
   try {
     // In production, protect this with a secret key or auth middleware
     await scraperService.fetchSchedule();

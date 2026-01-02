@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { supabaseAdmin } from './config/supabase';
 import apiRoutes from './routes/api';
 import { SchedulerService } from './services/scheduler';
+import { apiLimiter } from './middleware/rateLimiter';
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+// Apply rate limiting to all /api routes
+app.use('/api', apiLimiter);
 
 // Basic Health Check
 app.get('/health', (req: Request, res: Response) => {
