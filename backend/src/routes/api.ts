@@ -120,4 +120,23 @@ router.post('/notify-rally', strictLimiter, validateNotifyRally, async (req: Req
   }
 });
 
+import { TomTomService } from '../services/tomtom';
+const tomtomService = new TomTomService();
+
+// GET /routing - Proxy for TomTom Routing API
+router.get('/routing/:locations', async (req: Request, res: Response) => {
+  try {
+    const { locations } = req.params;
+    const data = await tomtomService.calculateRoute(locations);
+    
+    if (!data) {
+      return res.status(500).json({ error: 'Failed to fetch route from TomTom' });
+    }
+    
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: (err as Error).message });
+  }
+});
+
 export default router;

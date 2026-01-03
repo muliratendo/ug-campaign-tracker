@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 const pdf = require('pdf-parse');
 import { supabaseAdmin } from '../config/supabase';
+import { TomTomService } from './tomtom';
 
 interface RallyEvent {
   title: string;
@@ -17,6 +18,11 @@ export class ScraperService {
   // EC Data Sources
   private ecPageUrl: string = 'https://www.ec.or.ug/presidential-campaign-programme-2025-2026';
   private ecBaseUrl: string = 'https://www.ec.or.ug';
+  private tomtom: TomTomService;
+
+  constructor() {
+    this.tomtom = new TomTomService();
+  }
 
   /**
    * Main entry point to fetch and parse the schedule.
@@ -164,6 +170,19 @@ export class ScraperService {
         const startTimeISO = new Date(`${year}-${month}-${day}T12:00:00Z`).toISOString(); 
         const endTimeISO = new Date(`${year}-${month}-${day}T15:00:00Z`).toISOString(); // assume 3 hours
 
+        // 3. Geocode Venue
+        let location = 'POINT(32.5825 0.3476)'; // Default to Kampala
+        try {
+          const query = `${event.venue}, ${event.district}, Uganda`;
+          const geoResult = await this.tomtom.geocode(query);
+          if (geoResult) {
+            location = `POINT(${geoResult.lon} ${geoResult.lat})`;
+            console.log(`Geocoded ${event.venue} to ${geoResult.lat}, ${geoResult.lon}`);
+          }
+        } catch (geoErr) {
+          console.warn(`Geocoding failed for ${event.venue}, using default.`);
+        }
+
         const { error } = await supabaseAdmin
           .from('rallies')
           .upsert({
@@ -174,7 +193,7 @@ export class ScraperService {
             description: event.description,
             start_time: startTimeISO,
             end_time: endTimeISO,
-            location: 'POINT(32.58 -0.31)', // Default to roughly Kampala if geocoding missing
+            location: location,
             source_url: sourceUrl
           }, { onConflict: 'title, start_time' }); 
           
