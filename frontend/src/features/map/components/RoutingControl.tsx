@@ -4,13 +4,71 @@ import L from 'leaflet';
 import { createControlComponent } from '@react-leaflet/core';
 import 'leaflet-routing-machine';
 
-// Define props if we want to pass options later
-interface RoutingControlProps {
-  // e.g. waypoints
-}
+// Backend API Proxy for Routing
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
-const createRoutineMachineLayer = (props: RoutingControlProps) => {
+// Custom TomTom Router (Proxied via Backend)
+const TomTomRouter = L.Class.extend({
+  options: {
+    serviceUrl: `${API_URL}/routing`,
+  },
+
+  initialize: function(options: any) {
+    L.Util.setOptions(this, options);
+  },
+
+  route: function(waypoints: any[], callback: (err: any, routes?: any[]) => void, context: any) {
+    const locations = waypoints
+      .map(wp => `${wp.latLng.lat},${wp.latLng.lng}`)
+      .join(':');
+
+    const url = `${this.options.serviceUrl}/${locations}`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.routes || data.routes.length === 0) {
+          callback(new Error('No routes found'));
+          return;
+        }
+
+        const routes = data.routes.map((route: any) => {
+          const coordinates = route.legs.flatMap((leg: any) => 
+            leg.points.map((p: any) => L.latLng(p.latitude, p.longitude))
+          );
+
+          const instructions = route.guidance?.instructions.map((instr: any, i: number) => ({
+            type: 'Straight', // Mapping to LRM expected types or generic
+            text: instr.message,
+            distance: instr.routeOffsetInMeters,
+            time: instr.travelTimeInSeconds,
+            index: i
+          })) || [];
+
+          return {
+            name: route.summary.routeName || 'TomTom Route',
+            summary: {
+              totalDistance: route.summary.lengthInMeters,
+              totalTime: route.summary.travelTimeInSeconds,
+            },
+            coordinates,
+            instructions,
+            inputWaypoints: waypoints,
+            waypointIndices: [0, coordinates.length - 1] // Simple case for start/end
+          };
+        });
+
+        callback.call(context, null, routes);
+      })
+      .catch(err => callback.call(context, err));
+  }
+});
+
+const createRoutineMachineLayer = (props: any) => {
+  const router = new (TomTomRouter as any)();
+  
   const instance = L.Routing.control({
+    router: router,
     waypoints: [
       L.latLng(0.3476, 32.5825), // Start: Kampala
       L.latLng(0.0630, 32.4467)  // End: Entebbe (example default)
@@ -20,7 +78,7 @@ const createRoutineMachineLayer = (props: RoutingControlProps) => {
       extendToWaypoints: false,
       missingRouteTolerance: 0
     },
-    show: true, // Show the itinerary panel
+    show: true, 
     addWaypoints: true,
     routeWhileDragging: true,
     fitSelectedRoutes: true,
