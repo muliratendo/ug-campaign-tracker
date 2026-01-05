@@ -37,11 +37,15 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Supabase connection initialized`);
-  
-  // Start the background scheduler
-  const scheduler = new SchedulerService();
-  scheduler.start();
-});
+export { app };
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Supabase connection initialized`);
+    
+    // Start the background scheduler
+    const scheduler = new SchedulerService();
+    scheduler.start();
+  });
+}
