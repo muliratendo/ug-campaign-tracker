@@ -4,6 +4,7 @@ import MapWrapper from '../features/map/components/MapWrapper';
 import { useAuth } from '@/features/auth/hooks/AuthContext';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { BASE_API_URL } from '@/lib/api';
 
 interface Rally {
   id: string;
@@ -28,12 +29,10 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-        
         // Parallel Fetch
         const [ralliesRes, trafficRes] = await Promise.all([
-           fetch(`${apiUrl}/rallies`),
-           fetch(`${apiUrl}/traffic`)
+           fetch(`${BASE_API_URL}/rallies`),
+           fetch(`${BASE_API_URL}/traffic`)
         ]);
 
         if (ralliesRes.ok) {
@@ -48,7 +47,8 @@ export default function Home() {
         }
 
       } catch (err) {
-        console.error('Failed to load data:', err);
+        console.error('❌ Failed to load data from API:', err);
+        console.error('🔗 Attempted BASE_API_URL:', BASE_API_URL);
       }
     };
     fetchData();

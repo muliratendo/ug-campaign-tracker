@@ -3,7 +3,7 @@
  * Handles service worker registration and push subscription
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+import { BASE_API_URL as API_URL } from './api';
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
 /**

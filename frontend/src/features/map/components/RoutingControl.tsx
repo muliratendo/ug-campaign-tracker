@@ -3,9 +3,8 @@
 import L from 'leaflet';
 import { createControlComponent } from '@react-leaflet/core';
 import 'leaflet-routing-machine';
+import { BASE_API_URL as API_URL } from '@/lib/api';
 
-// Backend API Proxy for Routing
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
 // Custom TomTom Router (Proxied via Backend)
 const TomTomRouter = L.Class.extend({
