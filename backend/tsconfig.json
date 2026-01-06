@@ -10,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "lib": ["es2016"],
-    "types": ["jest", "node"]
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": [
