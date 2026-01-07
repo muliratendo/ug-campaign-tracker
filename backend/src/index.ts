@@ -1,7 +1,9 @@
+import './instrument';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import * as Sentry from "@sentry/node";
 import { supabaseAdmin } from './config/supabase';
 import apiRoutes from './routes/api';
 import { SchedulerService } from './services/scheduler';
@@ -16,7 +18,6 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
-
 // Apply rate limiting to all /api routes
 app.use('/api', apiLimiter);
 
@@ -28,12 +29,16 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.use('/api', apiRoutes);
 
-// Error handling middleware
+// Sentry error handler must be before any other error middleware and after all controllers
+Sentry.setupExpressErrorHandler(app);
+
+// Optional fallthrough error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ 
     error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined 
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined,
+    sentry_id: res.sentry,
   });
 });
 

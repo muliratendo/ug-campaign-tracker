@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-const pdf = require('pdf-parse');
+import { PDFParse } from 'pdf-parse';
 import { supabaseAdmin } from '../config/supabase';
 import { TomTomService } from './tomtom';
 
@@ -66,14 +66,16 @@ export class ScraperService {
   }
 
   private async processPdf(pdfUrl: string) {
+    let parser;
     try {
       console.log(`Downloading PDF: ${pdfUrl}`);
       const response = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
       const pdfBuffer = response.data;
 
       console.log('Parsing PDF content...');
-      const data = await pdf(pdfBuffer);
-      const text = data.text;
+      parser = new PDFParse({ data: pdfBuffer });
+      const result = await parser.getText();
+      const text = result.text;
       
       const events = this.parseTextToEvents(text);
       console.log(`Parsed ${events.length} events from ${pdfUrl.split('/').pop()}`);
@@ -83,6 +85,10 @@ export class ScraperService {
       }
     } catch (err) {
       console.error(`Failed to process PDF ${pdfUrl}:`, err);
+    } finally {
+      if (parser) {
+        await parser.destroy();
+      }
     }
   }
 
